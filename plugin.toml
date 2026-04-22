@@ -1,5 +1,5 @@
 [plugin]
-name = "fledge-stats"
+name = "fledge-plugin-stats"
 version = "0.1.0"
 description = "Project statistics — LOC, file counts, git activity, and change tracking"
 author = "CorvidLabs"
@@ -8,7 +8,7 @@ protocol = "fledge-v1"
 [[commands]]
 name = "stats"
 description = "Show project statistics"
-binary = "target/release/fledge-stats"
+binary = "target/release/fledge-plugin-stats"
 
 [hooks]
 build = "cargo build --release"

@@ -1,4 +1,4 @@
-// fledge-stats: example plugin demonstrating the fledge-v1 protocol.
+// fledge-plugin-stats: example plugin demonstrating the fledge-v1 protocol.
 // Zero external dependencies — uses only stdlib for JSON handling via simple helpers.
 
 use std::io::{self, BufRead, Write};

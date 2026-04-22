@@ -1,4 +1,4 @@
-# fledge-stats
+# fledge-plugin-stats
 
 Example plugin demonstrating the **fledge-v1 protocol**. Shows project statistics including file counts, lines of code, git history, and change tracking between runs.
 
@@ -15,11 +15,11 @@ Example plugin demonstrating the **fledge-v1 protocol**. Shows project statistic
 
 ```bash
 # Install from GitHub:
-fledge plugin install CorvidLabs/fledge-stats
+fledge plugin install CorvidLabs/fledge-plugin-stats
 
 # Or clone and install locally:
-git clone https://github.com/CorvidLabs/fledge-stats.git
-fledge plugin install ./fledge-stats
+git clone https://github.com/CorvidLabs/fledge-plugin-stats.git
+fledge plugin install ./fledge-plugin-stats
 ```
 
 ## Usage
