@@ -55,6 +55,16 @@ fledge stats
   ╰─────────────────────────────────────────╯
 ```
 
+## Development
+
+```bash
+cargo build --release
+cargo clippy -- -D warnings
+cargo fmt --check
+```
+
+CI runs on every push and PR via GitHub Actions (`.github/workflows/ci.yml`).
+
 ## Zero dependencies
 
 This plugin uses only the Rust standard library — no external crates. JSON is handled via simple string helpers, making it a minimal reference implementation of the fledge-v1 protocol.

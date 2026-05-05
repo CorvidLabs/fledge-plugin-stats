@@ -14,31 +14,91 @@ fn recv() -> String {
     lines.next().unwrap().unwrap()
 }
 
+/// Extract a string value for a given key from a flat or nested JSON string.
+/// This is a simple parser that finds `"key":"value"` patterns and handles
+/// escaped characters in the value.
 fn json_str(key: &str, json: &str) -> Option<String> {
     let pattern = format!("\"{}\":\"", key);
     let start = json.find(&pattern)? + pattern.len();
-    let end = json[start..].find('"')? + start;
-    Some(json[start..end].to_string())
+    let mut end = start;
+    let bytes = json.as_bytes();
+    while end < bytes.len() {
+        if bytes[end] == b'"' && (end == start || bytes[end - 1] != b'\\') {
+            break;
+        }
+        end += 1;
+    }
+    Some(json[start..end].replace("\\n", "\n").replace("\\\"", "\""))
+}
+
+/// Extract a nested JSON object/value for a given key.
+/// Returns the raw JSON substring for the value (object, array, string, or primitive).
+fn json_object(key: &str, json: &str) -> Option<String> {
+    let pattern = format!("\"{}\":", key);
+    let idx = json.find(&pattern)?;
+    let after_key = idx + pattern.len();
+    let rest = json[after_key..].trim_start();
+    let first = rest.as_bytes().first()?;
+    match first {
+        b'{' => {
+            let mut depth = 0;
+            let mut i = 0;
+            let bytes = rest.as_bytes();
+            while i < bytes.len() {
+                match bytes[i] {
+                    b'{' => depth += 1,
+                    b'}' => {
+                        depth -= 1;
+                        if depth == 0 {
+                            return Some(rest[..=i].to_string());
+                        }
+                    }
+                    b'"' => {
+                        i += 1;
+                        while i < bytes.len() && bytes[i] != b'"' {
+                            if bytes[i] == b'\\' {
+                                i += 1;
+                            }
+                            i += 1;
+                        }
+                    }
+                    _ => {}
+                }
+                i += 1;
+            }
+            None
+        }
+        _ => json_str(key, json).map(|s| s.to_string()),
+    }
 }
 
 fn exec(id: &str, command: &str) -> String {
     send(&format!(
         "{{\"type\":\"exec\",\"id\":\"{}\",\"command\":\"{}\"}}",
-        id, command
+        id,
+        command.replace('\\', "\\\\").replace('"', "\\\"")
     ));
     recv()
 }
 
 fn exec_stdout(id: &str, command: &str) -> String {
     let resp = exec(id, command);
-    json_str("stdout", &resp).unwrap_or_default()
+    // Response format: {"type":"response","id":"...","value":{"code":0,"stdout":"...","stderr":"..."}}
+    // Extract the value object first, then get stdout from it
+    if let Some(value_obj) = json_object("value", &resp) {
+        json_str("stdout", &value_obj).unwrap_or_default()
+    } else {
+        json_str("stdout", &resp).unwrap_or_default()
+    }
 }
 
 fn store(key: &str, value: &str) {
     send(&format!(
         "{{\"type\":\"store\",\"key\":\"{}\",\"value\":\"{}\"}}",
-        key, value
+        key,
+        value.replace('\\', "\\\\").replace('"', "\\\"")
     ));
+    // store is fire-and-forget — no response from host
 }
 
 fn load(id: &str, key: &str) -> String {
@@ -47,6 +107,8 @@ fn load(id: &str, key: &str) -> String {
         id, key
     ));
     let resp = recv();
+    // Response format: {"type":"response","id":"...","value":"..."}
+    // value may be a string or null
     json_str("value", &resp).unwrap_or_default()
 }
 
@@ -91,8 +153,11 @@ fn metadata(id: &str, keys: &[&str]) -> String {
 fn main() {
     let init_line = recv();
 
-    let project_name = json_str("name", &init_line).unwrap_or_else(|| "unknown".into());
-    let project_lang = json_str("language", &init_line).unwrap_or_else(|| "unknown".into());
+    // The init message has structure: {"type":"init","protocol":"fledge-v1","project":{"name":"...","language":"...",...},...}
+    // Extract the project object first, then get name/language from it.
+    let project_json = json_object("project", &init_line).unwrap_or_default();
+    let project_name = json_str("name", &project_json).unwrap_or_else(|| "unknown".into());
+    let project_lang = json_str("language", &project_json).unwrap_or_else(|| "unknown".into());
 
     log("info", &format!("Analyzing project: {}", project_name));
 
@@ -147,11 +212,10 @@ fn main() {
         "typescript" => "find . -name '*.ts' -o -name '*.tsx' | grep -v node_modules | xargs cat 2>/dev/null | wc -l",
         "python" => "find . -name '*.py' -exec cat {} + | wc -l",
         "go" => "find . -name '*.go' -exec cat {} + | wc -l",
-        _ => "wc -l $(find . -type f -name '*.rs' -o -name '*.ts' -o -name '*.py' -o -name '*.go' 2>/dev/null) 2>/dev/null | tail -1",
+        _ => "find . -type f \\( -name '*.rs' -o -name '*.ts' -o -name '*.py' -o -name '*.go' \\) -exec cat {} + 2>/dev/null | wc -l",
     };
     let loc_output = exec_stdout("loc", loc_cmd);
     let loc: u64 = loc_output
-        .trim()
         .split_whitespace()
         .next()
         .and_then(|s| s.parse().ok())
@@ -165,27 +229,24 @@ fn main() {
     let commit_count_output = exec_stdout("commits", "git rev-list --count HEAD 2>/dev/null");
     let commit_count: u64 = commit_count_output.trim().parse().unwrap_or(0);
 
-    let authors_output =
-        exec_stdout("authors", "git shortlog -sn --no-merges HEAD 2>/dev/null | head -5");
+    let authors_output = exec_stdout(
+        "authors",
+        "git shortlog -sn --no-merges HEAD 2>/dev/null | head -5",
+    );
     let top_authors: Vec<String> = authors_output
         .lines()
         .filter(|l| !l.trim().is_empty())
         .map(|l| l.trim().to_string())
         .collect();
 
-    let recent_output = exec_stdout(
-        "recent",
-        "git log --oneline -5 --no-merges 2>/dev/null",
-    );
+    let recent_output = exec_stdout("recent", "git log --oneline -5 --no-merges 2>/dev/null");
 
     // Step 4: Test file ratio
     progress("Analyzing test coverage", 4, 5);
 
     let test_files: u64 = all_files
         .iter()
-        .filter(|f| {
-            f.contains("test") || f.contains("spec") || f.ends_with("_test.go")
-        })
+        .filter(|f| f.contains("test") || f.contains("spec") || f.ends_with("_test.go"))
         .count() as u64;
 
     // Step 5: Load previous stats and compare
@@ -204,37 +265,37 @@ fn main() {
     // Store current stats for next run
     store("loc", &loc.to_string());
     store("total_files", &all_files.len().to_string());
-    store("last_run", &chrono_now());
+    store("last_run", &timestamp_now());
 
     // Render output
     output("\n");
     output("  ╭─────────────────────────────────────────╮\n");
     output(&format!(
-        "  │  {} stats                     │\n",
+        "  │  {:<16} stats                 │\n",
         truncate(&project_name, 16)
     ));
     output("  ├─────────────────────────────────────────┤\n");
     output(&format!(
-        "  │  Language    {}                          │\n",
+        "  │  Language    {:<12}              │\n",
         truncate(&project_lang, 12)
     ));
     output(&format!(
-        "  │  Files       {} {}│\n",
-        pad_left(&all_files.len().to_string(), 6),
+        "  │  Files       {:>6} {:<10}│\n",
+        all_files.len(),
         delta_str(files_delta)
     ));
     output(&format!(
-        "  │  LOC         {} {}│\n",
-        pad_left(&loc.to_string(), 6),
+        "  │  LOC         {:>6} {:<10}│\n",
+        loc,
         delta_str(loc_delta)
     ));
     output(&format!(
-        "  │  Commits     {}                          │\n",
-        pad_left(&commit_count.to_string(), 6)
+        "  │  Commits     {:>6}                    │\n",
+        commit_count
     ));
     output(&format!(
-        "  │  Test files  {} ({:.0}%)                   │\n",
-        pad_left(&test_files.to_string(), 6),
+        "  │  Test files  {:>6} ({:.0}%)               │\n",
+        test_files,
         if all_files.is_empty() {
             0.0
         } else {
@@ -257,9 +318,8 @@ fn main() {
     for (name, count) in &counts {
         if *count > 0 {
             output(&format!(
-                "  │  {:<12} {}                          │\n",
-                name,
-                pad_left(&count.to_string(), 5)
+                "  │  {:<12} {:>5}                    │\n",
+                name, count
             ));
         }
     }
@@ -270,7 +330,7 @@ fn main() {
     if !top_authors.is_empty() {
         output("  │  Top contributors                      │\n");
         for author in top_authors.iter().take(3) {
-            output(&format!("  │    {}│\n", truncate(author, 36)));
+            output(&format!("  │    {:<36}│\n", truncate(author, 36)));
         }
         output("  ├─────────────────────────────────────────┤\n");
     }
@@ -280,7 +340,7 @@ fn main() {
     for line in recent_output.lines().take(5) {
         let trimmed = line.trim();
         if !trimmed.is_empty() {
-            output(&format!("  │    {}│\n", truncate(trimmed, 36)));
+            output(&format!("  │    {:<36}│\n", truncate(trimmed, 36)));
         }
     }
 
@@ -294,30 +354,24 @@ fn truncate(s: &str, max: usize) -> String {
     if s.len() > max {
         format!("{}...", &s[..max - 3])
     } else {
-        format!("{:<width$}", s, width = max)
+        s.to_string()
     }
-}
-
-fn pad_left(s: &str, width: usize) -> String {
-    format!("{:>width$}", s, width = width)
 }
 
 fn delta_str(delta: i64) -> String {
     if delta == 0 {
-        "          ".to_string()
+        String::new()
     } else if delta > 0 {
-        format!("(+{:<6}) ", delta)
+        format!("(+{})", delta)
     } else {
-        format!("({:<7}) ", delta)
+        format!("({})", delta)
     }
 }
 
-fn chrono_now() -> String {
+fn timestamp_now() -> String {
     let secs = std::time::SystemTime::now()
         .duration_since(std::time::UNIX_EPOCH)
         .unwrap()
         .as_secs();
-    let days = secs / 86400;
-    let y = 1970 + (days * 400 / 146097);
-    format!("{}-xx-xx", y)
+    secs.to_string()
 }
