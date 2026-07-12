@@ -1,0 +1,5 @@
+[registry]
+name = "fledge-plugin-stats-trust-wave6"
+
+[specs]
+stats = "specs/stats/stats.spec.md"

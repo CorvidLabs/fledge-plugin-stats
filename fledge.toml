@@ -1,0 +1,11 @@
+[tasks]
+build = "cargo build --release"
+dev = "cargo build"
+test = "cargo test"
+check = "cargo clippy -- -D warnings"
+fmt = "cargo fmt --check"
+manifest = "grep -q 'protocol = \"fledge-v1\"' plugin.toml && grep -q 'binary = \"target/release/fledge-plugin-stats\"' plugin.toml"
+
+[lanes.verify]
+description = "Format, lint, test, build, and validate the Stats Fledge plugin"
+steps = ["fmt", "check", "test", "build", "manifest"]

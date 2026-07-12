@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "id": "CHG-0001-adopt-specsync-5-0-1-and-trust-1-0-0-governance-for-the-stats-fledge-plugin",
+  "slug": "adopt-specsync-5-0-1-and-trust-1-0-0-governance-for-the-stats-fledge-plugin",
+  "title": "Adopt SpecSync 5.0.1 and Trust 1.0.0 governance for the Stats Fledge plugin",
+  "description": "Adopt SpecSync 5.0.1 and Trust 1.0.0 governance for the Stats Fledge plugin",
+  "kind": "migration",
+  "state": "draft",
+  "base_commit": "a4835af6d5a4c103a308117f5be37ecde0f3d730",
+  "created_at": 1783883695,
+  "updated_at": 1783883707,
+  "affected_specs": [
+    "stats"
+  ],
+  "affected_paths": [
+    "src/",
+    "Cargo.toml",
+    "Cargo.lock",
+    "plugin.toml",
+    "fledge.toml",
+    ".github/",
+    ".specsync/",
+    "specs/",
+    ".trust.toml",
+    ".augur.toml",
+    ".attest.json",
+    "AGENTS.md"
+  ],
+  "no_spec_change": false,
+  "no_spec_change_rationale": null,
+  "acceptance_criteria": [
+    "Strict SpecSync validation passes at 100% coverage; Claude",
+    "Cursor",
+    "Codex",
+    "and Gemini integrations report installed; Trust doctor and the native verify lane pass; Rust formatting",
+    "clippy",
+    "tests",
+    "release build",
+    "and manifest validation pass."
+  ],
+  "selected_artifacts": [
+    "context",
+    "research",
+    "design",
+    "plan",
+    "tasks",
+    "testing",
+    "docs"
+  ],
+  "dependencies": [],
+  "answers": {
+    "architecture_risk": "yes",
+    "public_contract": "no"
+  }
+}
