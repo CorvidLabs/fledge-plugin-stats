@@ -12,3 +12,4 @@ artifact: testing
 - Run fledge trust doctor and fledge trust verify.
 - Confirm hosted CI and the trust job on the pull request.
 
+Requirement evidence maps `REQ-stats-001` to protocol exchange inspection, `REQ-stats-002` to exclusion-command inspection, `REQ-stats-003` to report assembly inspection, `REQ-stats-004` to load/store message inspection, and `REQ-stats-005` to parsing fallback inspection. The native lane compiles and exercises the binary surface without claiming nonexistent unit coverage.

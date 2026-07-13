@@ -1,3 +1,11 @@
 {
-  "approvals": []
+  "approvals": [
+    {
+      "gate": "definition",
+      "actor": "user:0xLeif",
+      "timestamp": 1783971908,
+      "digest": "ee7f1b55dee1c53662fc055fc4f3d130ae672f21bedc9a2403b82790e54d6fbf",
+      "note": "Definition approved after auditing the migration-only canonical contract, deterministic IDs, truthful zero-test native lane, and complete requirement mapping."
+    }
+  ]
 }

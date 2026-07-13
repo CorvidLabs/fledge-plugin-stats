@@ -10,5 +10,4 @@ artifact: tasks
 - [x] Add Fledge, Trust, Augur, and Attest policy files.
 - [x] Add the immutable Trust workflow.
 - [x] Preserve the existing Rust CI workflow.
-- [ ] Obtain owner definition and closing approvals.
-
+- [x] Prepare the complete definition, canonical requirement delta, and verification mapping for human approval.
