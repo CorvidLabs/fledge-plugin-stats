@@ -6,6 +6,13 @@
       "timestamp": 1783971908,
       "digest": "ee7f1b55dee1c53662fc055fc4f3d130ae672f21bedc9a2403b82790e54d6fbf",
       "note": "Definition approved after auditing the migration-only canonical contract, deterministic IDs, truthful zero-test native lane, and complete requirement mapping."
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1783971962,
+      "digest": "105462a67e8142a3dd93fa2b488aa4edb88de644ce401b8daaed4e8700b56a7f",
+      "note": "Accepted after the five-step Rust lane passed against the final semantic delta; zero native tests are reported truthfully and all five requirements have source-inspection evidence."
     }
   ]
 }

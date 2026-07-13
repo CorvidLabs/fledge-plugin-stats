@@ -1,6 +1,6 @@
 ---
 module: stats
-version: 1
+version: 2
 status: active
 files:
   - src/main.rs
@@ -59,3 +59,4 @@ Then it reports language, file, LOC, Git, contributor, recent-commit, and previo
 | Version | Date | Changes |
 |---------|------|---------|
 | 1 | 2026-07-12 | Document existing Stats plugin behavior for SpecSync 5 adoption. |
+| 2026-07-13 | CHG-0001-adopt-specsync-5-0-1-and-trust-1-0-0-governance-for-the-stats-fledge-plugin: Adopt SpecSync 5.0.1 and Trust 1.0.0 governance for the Stats Fledge plugin |
