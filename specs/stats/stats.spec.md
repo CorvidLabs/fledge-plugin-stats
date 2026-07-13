@@ -1,6 +1,6 @@
 ---
 module: stats
-version: 2
+version: 3
 status: active
 files:
   - src/main.rs
@@ -25,10 +25,10 @@ Provide a zero-runtime-dependency `fledge-v1` plugin that summarizes project siz
 ## Invariants
 
 1. Standard output contains only valid `fledge-v1` protocol messages until the final host-rendered output message.
-2. Host requests use stable correlation identifiers and consume their corresponding responses before continuing.
+2. Response-bearing host requests use stable correlation identifiers and consume their corresponding responses before continuing; snapshot stores are explicitly fire-and-forget.
 3. File counts exclude Git metadata, build output, and dependency directories.
 4. A missing or malformed optional host value degrades to an empty or zero statistic rather than fabricating data.
-5. The current file and LOC totals are persisted after the report is produced for the next-run delta.
+5. The current file and LOC totals are persisted after statistics and deltas are calculated and before final output is emitted.
 6. The manifest points `fledge stats` at the release binary and declares the `fledge-v1` protocol.
 
 ## Behavioral Examples
@@ -59,4 +59,5 @@ Then it reports language, file, LOC, Git, contributor, recent-commit, and previo
 | Version | Date | Changes |
 |---------|------|---------|
 | 1 | 2026-07-12 | Document existing Stats plugin behavior for SpecSync 5 adoption. |
-| 2026-07-13 | CHG-0001-adopt-specsync-5-0-1-and-trust-1-0-0-governance-for-the-stats-fledge-plugin: Adopt SpecSync 5.0.1 and Trust 1.0.0 governance for the Stats Fledge plugin |
+| 2 | 2026-07-13 | CHG-0001-adopt-specsync-5-0-1-and-trust-1-0-0-governance-for-the-stats-fledge-plugin: Adopt SpecSync 5.0.1 and Trust 1.0.0 governance for the Stats Fledge plugin |
+| 3 | 2026-07-13 | CHG-0002-correct-stats-lifecycle-guidance-and-snapshot-contract-timing: Correct Stats lifecycle guidance and snapshot contract timing |

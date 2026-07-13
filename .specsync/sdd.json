@@ -5,7 +5,12 @@
   "meaningful_paths": [
     "src/",
     "tests/",
-    "site/",
+    "docs/",
+    "README.md",
+    "AGENTS.md",
+    ".claude/",
+    ".cursor/",
+    ".gemini/",
     ".github/",
     "Cargo.toml",
     "Cargo.lock",
@@ -35,10 +40,7 @@
   ],
   "ignored_paths": [],
   "verification_commands": [
-    "cargo fmt --check",
-    "cargo clippy -- -D warnings",
-    "cargo test",
-    "cargo build --release"
+    "fledge lanes run verify"
   ],
   "custom_artifacts": {},
   "principles_file": null

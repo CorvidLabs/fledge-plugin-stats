@@ -24,7 +24,10 @@ spec: stats.spec.md
 The plugin SHALL obtain project context and derived statistics through the `fledge-v1` JSON-lines protocol.
 
 Acceptance Criteria
-- Source inspection confirms every request and response is a newline-delimited protocol message with a stable correlation identifier; the release binary builds successfully.
+
+- Source inspection confirms response-bearing requests and responses are newline-delimited protocol messages with stable correlation identifiers.
+- Snapshot store messages remain valid fire-and-forget protocol messages without claiming a response correlation identifier.
+- The release binary builds successfully.
 
 ### REQ-stats-002
 
@@ -45,7 +48,9 @@ Acceptance Criteria
 The plugin SHALL load the previous file and LOC totals, report their deltas, and persist the current totals for the next run.
 
 Acceptance Criteria
-- Source inspection confirms the previous snapshot is loaded before delta calculation and the current totals are stored after report assembly.
+
+- Source inspection confirms previous totals are loaded before delta calculation.
+- Current totals are stored after statistics and deltas are calculated and before final output is emitted.
 
 ### REQ-stats-005
 

@@ -1,28 +1,13 @@
 {
-  "timestamp": 1783971962,
-  "commit": "206836566f6b18cac542b650a06a3eddea26641e",
+  "timestamp": 1783984975,
+  "commit": "3a53670e68bc4df2c5a5a3d4fc18bd753643d2e1",
   "contract_digest": "ee7f1b55dee1c53662fc055fc4f3d130ae672f21bedc9a2403b82790e54d6fbf",
-  "workspace_digest": "47e60628e76b3b72f557c175e0912471fe43973be15b99dbc9860efcab55aa3d",
-  "acceptance_input_digest": "fedefe8dd3a3c59e56b99810549c6dd0738aa14f00e48a414183e1786059ebc0",
+  "workspace_digest": "0844aadec7c343d9d313d632154ecd98bbbdf11d012fd83d56628c2f9700bed3",
+  "acceptance_input_digest": "953656a9cfa2867386cdd3db853edc477cb731a0bf016f9403cc58ffa110b42a",
   "passed": true,
   "commands": [
     {
-      "command": "cargo fmt --check",
-      "success": true,
-      "exit_code": 0
-    },
-    {
-      "command": "cargo clippy -- -D warnings",
-      "success": true,
-      "exit_code": 0
-    },
-    {
-      "command": "cargo test",
-      "success": true,
-      "exit_code": 0
-    },
-    {
-      "command": "cargo build --release",
+      "command": "fledge lanes run verify",
       "success": true,
       "exit_code": 0
     }
