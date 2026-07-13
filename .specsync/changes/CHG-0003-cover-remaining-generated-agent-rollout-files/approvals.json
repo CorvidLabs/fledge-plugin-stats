@@ -1,0 +1,19 @@
+{
+  "approvals": [
+    {
+      "gate": "definition",
+      "actor": "user:0xLeif",
+      "timestamp": 1783985082,
+      "digest": "13237b9948de307515d1653760c544bf6c527eef9964ea99000ef4cf374034fc",
+      "note": "Approved portable no-spec definition for the exact generated integration paths reported by hosted SpecSync."
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1783985083,
+      "digest": "29868ed4a9323570e0950772f8872d0018442537f88ae78b9c149b12e5bc89e4",
+      "note": "Native verification passed for exact generated-agent delivery coverage; hosted CI remains required before promotion and is not claimed here."
+    }
+  ],
+  "reopenings": []
+}

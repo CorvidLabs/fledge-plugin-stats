@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "id": "CHG-0003-cover-remaining-generated-agent-rollout-files",
+  "slug": "cover-remaining-generated-agent-rollout-files",
+  "title": "Cover remaining generated agent rollout files",
+  "description": "Cover remaining generated agent rollout files",
+  "kind": "migration",
+  "state": "accepted",
+  "canonical_applied": true,
+  "base_commit": "49ff88c9b24e97ec0d6c901bfc0dbe19b7a2047f",
+  "created_at": 1783985039,
+  "updated_at": 1783985083,
+  "affected_specs": [],
+  "affected_paths": [
+    ".claude/commands/specsync/create-change.md",
+    ".claude/skills/spec-sync/SKILL.md",
+    ".cursor/commands/specsync-create-change.md",
+    ".cursor/skills/spec-sync/SKILL.md",
+    ".gemini/skills/spec-sync/SKILL.md"
+  ],
+  "no_spec_change": true,
+  "no_spec_change_rationale": "Declare the already-migrated generated Claude, Cursor, and Gemini instruction files as delivery inputs so the pull-request range is fully covered without changing Stats requirements or Rust behavior.",
+  "acceptance_criteria": [
+    "SpecSync recognizes the five existing Claude",
+    "Cursor",
+    "and Gemini rollout files as covered delivery inputs; strict validation retains real 1/1 file and 377/377 LOC coverage; native Fledge verification and the hosted Trust contract gate pass."
+  ],
+  "selected_artifacts": [
+    "context",
+    "research",
+    "design",
+    "plan",
+    "tasks",
+    "testing",
+    "docs"
+  ],
+  "dependencies": [],
+  "answers": {
+    "architecture_risk": "no",
+    "public_contract": "no"
+  }
+}
