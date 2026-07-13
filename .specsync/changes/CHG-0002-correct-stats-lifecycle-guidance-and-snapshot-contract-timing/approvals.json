@@ -1,0 +1,19 @@
+{
+  "approvals": [
+    {
+      "gate": "definition",
+      "actor": "user:0xLeif",
+      "timestamp": 1783984939,
+      "digest": "ca9b211455e69981ee6d6801155d1e8608fa3510419acf718979825e2e6fa615",
+      "note": "Approved portable definition for truthful protocol correlation, snapshot ordering, and lifecycle guidance corrections."
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1783984974,
+      "digest": "687eed81b713fb197c0a7ad0bec1ccb65bbe06d55dd4b1f01bfbcab8ccdebaf1",
+      "note": "Native formatting, clippy, truthful zero-test result, release build, manifest validation, and direct source evidence passed. Hosted CI remains required before promotion."
+    }
+  ],
+  "reopenings": []
+}

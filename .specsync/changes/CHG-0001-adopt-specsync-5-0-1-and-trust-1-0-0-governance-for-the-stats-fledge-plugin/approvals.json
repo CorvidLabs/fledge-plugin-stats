@@ -1,0 +1,82 @@
+{
+  "approvals": [
+    {
+      "gate": "definition",
+      "actor": "user:0xLeif",
+      "timestamp": 1783971908,
+      "digest": "ee7f1b55dee1c53662fc055fc4f3d130ae672f21bedc9a2403b82790e54d6fbf",
+      "note": "Definition approved after auditing the migration-only canonical contract, deterministic IDs, truthful zero-test native lane, and complete requirement mapping."
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1783971962,
+      "digest": "105462a67e8142a3dd93fa2b488aa4edb88de644ce401b8daaed4e8700b56a7f",
+      "note": "Accepted after the five-step Rust lane passed against the final semantic delta; zero native tests are reported truthfully and all five requirements have source-inspection evidence."
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1783984976,
+      "digest": "86ede029b94082c049872252262f4fa4335a92c1e72fc9231a05f3459e4af3d3",
+      "note": "Fresh native verification passed with CHG-0002 present; the previously applied canonical delta was not replayed. Cargo reports zero native tests truthfully. Hosted CI remains required before promotion."
+    }
+  ],
+  "reopenings": [
+    {
+      "schema_version": 1,
+      "change_id": "CHG-0001-adopt-specsync-5-0-1-and-trust-1-0-0-governance-for-the-stats-fledge-plugin",
+      "actor": "user:0xLeif",
+      "reason": "CHG-0002 corrected the accepted Stats delivery contract and shared lifecycle guidance after the prior evidence.",
+      "timestamp": 1783984975,
+      "from_state": "accepted",
+      "to_state": "verifying",
+      "superseded_approval": {
+        "gate": "acceptance",
+        "actor": "user:0xLeif",
+        "timestamp": 1783971962,
+        "digest": "105462a67e8142a3dd93fa2b488aa4edb88de644ce401b8daaed4e8700b56a7f",
+        "note": "Accepted after the five-step Rust lane passed against the final semantic delta; zero native tests are reported truthfully and all five requirements have source-inspection evidence."
+      },
+      "prior_verification": {
+        "timestamp": 1783971962,
+        "commit": "206836566f6b18cac542b650a06a3eddea26641e",
+        "contract_digest": "ee7f1b55dee1c53662fc055fc4f3d130ae672f21bedc9a2403b82790e54d6fbf",
+        "workspace_digest": "47e60628e76b3b72f557c175e0912471fe43973be15b99dbc9860efcab55aa3d",
+        "acceptance_input_digest": "fedefe8dd3a3c59e56b99810549c6dd0738aa14f00e48a414183e1786059ebc0",
+        "passed": true,
+        "commands": [
+          {
+            "command": "cargo fmt --check",
+            "success": true,
+            "exit_code": 0
+          },
+          {
+            "command": "cargo clippy -- -D warnings",
+            "success": true,
+            "exit_code": 0
+          },
+          {
+            "command": "cargo test",
+            "success": true,
+            "exit_code": 0
+          },
+          {
+            "command": "cargo build --release",
+            "success": true,
+            "exit_code": 0
+          }
+        ],
+        "requirement_ids": [
+          "REQ-stats-001",
+          "REQ-stats-002",
+          "REQ-stats-003",
+          "REQ-stats-004",
+          "REQ-stats-005"
+        ]
+      },
+      "stale_acceptance_input_digest": "fedefe8dd3a3c59e56b99810549c6dd0738aa14f00e48a414183e1786059ebc0",
+      "current_acceptance_input_digest": "953656a9cfa2867386cdd3db853edc477cb731a0bf016f9403cc58ffa110b42a"
+    }
+  ]
+}
