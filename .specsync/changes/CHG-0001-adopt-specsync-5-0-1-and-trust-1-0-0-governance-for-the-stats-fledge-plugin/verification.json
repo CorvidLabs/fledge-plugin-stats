@@ -1,0 +1,36 @@
+{
+  "timestamp": 1783971922,
+  "commit": "6c29214a4326f1c02685ee007510f82d524224ec",
+  "contract_digest": "ee7f1b55dee1c53662fc055fc4f3d130ae672f21bedc9a2403b82790e54d6fbf",
+  "workspace_digest": "f1b31c294801a6e52772284378b7b7dc249d933ed3bf61b003e2b45f9efc0309",
+  "passed": true,
+  "commands": [
+    {
+      "command": "cargo fmt --check",
+      "success": true,
+      "exit_code": 0
+    },
+    {
+      "command": "cargo clippy -- -D warnings",
+      "success": true,
+      "exit_code": 0
+    },
+    {
+      "command": "cargo test",
+      "success": true,
+      "exit_code": 0
+    },
+    {
+      "command": "cargo build --release",
+      "success": true,
+      "exit_code": 0
+    }
+  ],
+  "requirement_ids": [
+    "REQ-stats-001",
+    "REQ-stats-002",
+    "REQ-stats-003",
+    "REQ-stats-004",
+    "REQ-stats-005"
+  ]
+}
